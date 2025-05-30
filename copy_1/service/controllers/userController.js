@@ -337,46 +337,46 @@ const getUserById = async (req, res) => {
   }
 };
 
-const getSocietyModerator = async (req, res) => {
-  try {
-    const societyId = req.params.societyId;
-    if (!societyId) {
-      return res.status(400).json({ message: "Society ID is required" });
-    }
-    const moderator = await User.findAll({
-      where: {
-        societyId,
-        isManagementCommittee: true,
-        isDeleted: 0,
-        status: "active",
-      },
-      attributes: [
-        "userId",
-        "salutation",
-        "firstName",
-        "lastName",
-        "email",
-        "mobileNumber",
-        "roleId",
-        "status",
-        "addressId",
-        "primaryContact",
-        "livesHere",
-      ],
-    })
-    if (!moderator || moderator.length === 0) {
-      return res.status(404).json({ message: "No society moderator found for the given Society ID" });
-    }
-    res.status(200).json({
-      message: "Society Moderator fetched successfully",
-      moderator,
-    });
-  }
-  catch (error) {
-    console.error("Error fetching society moderator:", error);
-    res.status(500).json({ error: error.message });
-  }
-}
+// const getSocietyModerator = async (req, res) => {
+//   try {
+//     const societyId = req.params.societyId;
+//     if (!societyId) {
+//       return res.status(400).json({ message: "Society ID is required" });
+//     }
+//     const moderator = await User.findAll({
+//       where: {
+//         societyId,
+//         isManagementCommittee: true,
+//         isDeleted: 0,
+//         status: "active",
+//       },
+//       attributes: [
+//         "userId",
+//         "salutation",
+//         "firstName",
+//         "lastName",
+//         "email",
+//         "mobileNumber",
+//         "roleId",
+//         "status",
+//         "addressId",
+//         "primaryContact",
+//         "livesHere",
+//       ],
+//     })
+//     if (!moderator || moderator.length === 0) {
+//       return res.status(404).json({ message: "No society moderator found for the given Society ID" });
+//     }
+//     res.status(200).json({
+//       message: "Society Moderator fetched successfully",
+//       moderator,
+//     });
+//   }
+//   catch (error) {
+//     console.error("Error fetching society moderator:", error);
+//     res.status(500).json({ error: error.message });
+//   }
+// }
 
 const getManagement_committee = async (req, res) => {
   try{
@@ -384,33 +384,27 @@ const getManagement_committee = async (req, res) => {
     if(!societyId) {
       return res.status(400).json({ message: "Society ID is required" });
     }
-    const managementCommittee = await User.findAll({
+    const allowedCategories = ["management_committee","society_moderator"];
+    const roles = await Role.findAll({
+      where: {
+        roleCategory: allowedCategories,
+      }
+    });
+
+    const roleIds = roles.map(role => role.roleId);
+    const members = await User.findAll({
       where: {
         societyId,
-        management_committee: true,
-        isDeleted: 0,
-        status: "active",
+        roleId: roleIds,
       },
-      attributes: [
-        "userId",
-        "salutation",
-        "firstName",
-        "lastName",
-        "email",
-        "mobileNumber",
-        "roleId",
-        "status",
-        "addressId",
-        "primaryContact",
-        "livesHere",
-      ]
-    })
-    if (!managementCommittee || managementCommittee.length === 0) {
-      return res.status(404).json({ message: "No management committee found for the given Society ID" });
-    }
+      include: [
+        {model: Role, as:"role"},
+        // {model: Address, as: "address"},
+      ],
+    });
     res.status(200).json({
-      message: "Management Committee fetched successfully",
-      managementCommittee,
+      message: "Management committee members fetched successfully",
+      members,
     });
   }
   catch (error) {
@@ -428,6 +422,6 @@ module.exports = {
   bulkCreateResidents,
   getResidentBySocietyId,
   updateResidentBySocietyId,
-  getSocietyModerator,
+  //getSocietyModerator,
   getManagement_committee,
 };
