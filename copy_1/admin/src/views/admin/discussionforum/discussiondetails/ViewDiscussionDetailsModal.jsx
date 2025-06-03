@@ -1,14 +1,20 @@
-
 import React from "react";
 import Dialog from "../../../../components/ui/Dialog";
-import { FaHeading, FaStickyNote, FaUsers, FaFileAlt, FaImage, FaLock } from "react-icons/fa";
+import {
+  FaHeading,
+  FaStickyNote,
+  FaUsers,
+  FaFileAlt,
+  FaImage,
+  FaLock,
+} from "react-icons/fa";
 
 // Helper to resolve full image URL
 const getImageUrl = (path) => {
   if (!path) return null;
   if (path.startsWith("http")) return path;
   //return `http://localhost:5000/${path}`;
-  return `${process.env.REACT_APP_PUBLIC_BASE_URL}/${path}` // Replace with actual server URL
+  return `${process.env.REACT_APP_PUBLIC_BASE_URL}/${path}`; // Replace with actual server URL
 };
 
 const getGroupName = (id) => {
@@ -44,31 +50,32 @@ const ViewDiscussionDetailsModal = ({
       overlayClassName="backdrop-blur"
     >
       <div className="p-8 bg-gray-100 border rounded-lg">
-        <h2 className="mb-6 text-2xl font-semibold text-gray-800">Discussion Details</h2>
+        <h2 className="mb-6 text-2xl font-semibold text-gray-800">
+          Discussion Details
+        </h2>
 
         <ul className="space-y-6">
           <li className="flex items-start gap-4 p-4 bg-white rounded-md shadow-sm">
             <FaHeading className="mt-1 text-xl text-blue-600" />
             <div>
               <h4 className="text-sm text-gray-500">Discussion Heading</h4>
-              <p className="font-medium text-gray-800">{formData?.discussionTitle || "—"}</p>
+              <p className="font-medium text-gray-800">
+                {formData?.discussionTitle || "—"}
+              </p>
             </div>
           </li>
-
-         
 
           <li className="flex items-start gap-4 p-4 bg-white border rounded-md shadow-sm">
             <FaStickyNote className="flex-shrink-0 mt-1 text-2xl text-blue-600" />
             <div className="flex-1">
-              <h4 className="mb-1 text-sm font-medium text-gray-600">Discussion Description</h4>
+              <h4 className="mb-1 text-sm font-medium text-gray-600">
+                Discussion Description
+              </h4>
               <div className="p-3 overflow-auto text-sm text-gray-800 whitespace-pre-line border border-gray-200 rounded max-h-48 bg-gray-50">
                 {formData?.discussionDescription || "—"}
               </div>
             </div>
           </li>
-
-
-        
 
           {imageUrl && (
             <li className="flex items-start gap-4 p-4 bg-white rounded-md shadow-sm">
