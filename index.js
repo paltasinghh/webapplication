@@ -10,17 +10,10 @@ const PORT = process.env.PORT || 5001;
 
 (async function startServer() {
   try {
-    // Connect database first
     await sequelize.authenticate();
     console.log("Database connected successfully");
-
-    //  Create HTTP server
     const server = http.createServer(app);
-
-    // Initialize Socket.IO
     setupSocket(server);
-
-    //  Start listening
     server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
